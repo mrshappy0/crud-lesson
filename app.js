@@ -45,6 +45,20 @@ fetch(BASE_URL)
             dogsContainer.appendChild(dogCard)
         })
     })
+function createDogCard(dog) {
+
+    const dogCard = document.createElement('div')
+    dogCard.className = 'card'
+    dogCard.innerHTML = `
+        <img src=${dog.image} class="card-img-top" alt=${dog.name}>
+        <div class="card-body">
+            <h5 class="card-title">${dog.name}</h5>                <p class="card-text">Breed: ${dog.breed}</p>
+            <p class="card-text">Age: ${dog.age}</p>
+        </div>
+    `
+    dogsContainer.appendChild(dogCard)
+
+}
 
 dogForm.addEventListener('submit', () => {
     event.preventDefault()
@@ -54,7 +68,7 @@ dogForm.addEventListener('submit', () => {
     const breed = formData.get('breed')
     const age = formData.get('age')
     console.log(image, name, breed, age)
-
+    createDogCard({ name, image, breed, age })
     fetch(BASE_URL, {
         method: 'POST',
         headers: {
