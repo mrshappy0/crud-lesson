@@ -29,7 +29,27 @@ fetch(BASE_URL)
                     method: 'DELETE'
                 }).then(event.target.parentNode.remove())
             })
-            dogCard.append(deleteButton)
+            const editDogForm = document.createElement('form')
+            editDogForm.className = 'form-group'
+            editDogForm.innerHTML = `
+                <label for="age">Age:</label>
+                <input type="number" id=${dog.id} name="age" placeholder="Age" />
+                <button type="submit" class="btn btn-primary"> Submit </button>
+            `
+            editDogForm.addEventListener('submit', () => {
+                event.preventDefault()
+                const age = document.getElementById(`${dog.id}`).value
+
+                fetch(`${BASE_URL}/${dog.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ age })
+                })
+            })
+            dogCard.append(editDogForm, deleteButton)
             dogsContainer.appendChild(dogCard)
         })
     })
