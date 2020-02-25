@@ -14,17 +14,44 @@ function createDogCard(dog) {
   dogCard.innerHTML = `
           <img class="card-img-top" src=${dog.image} >
           <div class="card-body">
-          <h5 class="card-title">${dog.name}</h5>
-          <p class="card-text">Breed:${dog.breed}</p>
-          <p class="card-text">Age:${dog.age}</p>
+            <h5 class="card-title">${dog.name}</h5>
+            <p class="card-text">Breed:${dog.breed}</p>
+            <p class="card-text">Age:${dog.age}</p>
+          </div>
          `;
+
+  const editDogForm = document.createElement("form");
+  editDogForm.className = "form-group";
+  editDogForm.innerHTML = `
+      <label for="age">Dog Age:</label>
+      <input type="text" name="age" id="${dog.id}" placeholder="fucking old" />
+      <button type="submit" class="btn btn-primary"> submit</button>
+
+  `;
+
+  editDogForm.addEventListener("submit", () => {
+    event.preventDefault();
+    const age = document.getElementById(`${dog.id}`).value;
+
+    fetch(`${BASE_URL}/${dog.id}`, {
+      method: "PATCH",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ age })
+    });
+  });
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "DELETE";
+  deleteButton.addEventListener("click", () => {
+    fetch(`${BASE_URL}/${dog.id}`, {
+      method: "DELETE"
+    }).then(event.target.parentNode.remove());
+  });
+  dogCard.append(editDogForm, deleteButton);
   dogsContainer.appendChild(dogCard);
-  deleteButton.textContet = 'DELETE';
-  deleteButton.addEventListener('click', ()=>{
-      fetch(`${BASE_URL}/${dog.id}`, {
-          method: 'DELETE'
-      }).then(event.target.parentNode.remove())
-  })
 }
 
 dogForm.addEventListener("submit", () => {
@@ -39,7 +66,7 @@ dogForm.addEventListener("submit", () => {
   fetch(BASE_URL, {
     method: "POST",
     headers: {
-      Accept: "application/json",
+      "Accept": "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
