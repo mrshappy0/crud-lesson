@@ -24,19 +24,20 @@ function createDogCard(dog) {
   editDogForm.className = "form-group";
   editDogForm.innerHTML = `
       <label for="age">Dog Age:</label>
-      <input type="text" name="age" id="${dog.id}" placeholder="fucking old" />
+      <input type="number" name="age" id="${dog.id}" placeholder="fucking old" />
       <button type="submit" class="btn btn-primary"> submit</button>
 
   `;
 
   editDogForm.addEventListener("submit", () => {
-    event.preventDefault();
+    // event.preventDefault();
     const age = document.getElementById(`${dog.id}`).value;
+    console.log(age);
 
     fetch(`${BASE_URL}/${dog.id}`, {
       method: "PATCH",
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ age })
@@ -51,22 +52,22 @@ function createDogCard(dog) {
     }).then(event.target.parentNode.remove());
   });
   dogCard.append(editDogForm, deleteButton);
-  dogsContainer.appendChild(dogCard);
+  dogsContainer.append(dogCard);
 }
 
 dogForm.addEventListener("submit", () => {
   event.preventDefault();
   const formData = new FormData(dogForm);
-  console.log(formData);
   const name = formData.get("name"); //use name from HTML form
   const breed = formData.get("breed");
   const image = formData.get("image");
   const age = formData.get("age");
+
   createDogCard({ name, breed, image, age });
   fetch(BASE_URL, {
     method: "POST",
     headers: {
-      "Accept": "application/json",
+      Accept: "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
